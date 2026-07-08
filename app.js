@@ -76,6 +76,67 @@ app.post('/addStudent', (req, res) => {
     }
   });
 });
+
+// 5. Render Edit Student form view
+app.get('/editStudent/:id', (req, res) => {
+  const studentId = req.params.id;
+  const sql = 'SELECT * FROM student WHERE studentId = ?';
+  
+  // Fetch data from MySQL based on the student ID
+  connection.query(sql, [studentId], (error, results) => {
+    if (error) {
+      console.error('Database query error:', error.message); 
+      return res.send('Error retrieving student by ID'); 
+    }
+    // Check if any student with the given ID was found
+    if (results.length > 0) {
+      // Render the editStudent HTML/EJS page with the student data
+      res.render('editStudent', { student: results[0] });
+    } else {
+      // If no student with the given ID was found, handle it accordingly
+      res.send('Student not found');
+    }
+  });
+});
+
+// 6. Handle Edit Student form submission
+app.post('/editStudent/:id', (req, res) => {
+  const studentId = req.params.id;
+  // Extract student data from the form request body
+  const { name, dob, contact, image } = req.body;
+  
+  const sql = 'UPDATE student SET name = ?, dob = ?, contact = ?, image = ? WHERE studentId = ?';
+  
+  // Update the student details in the database
+  connection.query(sql, [name, dob, contact, image, studentId], (error, results) => {
+    if (error) {
+      // Handle any error that occurs during the database operation
+      console.error("Error updating student:", error);
+      res.send('Error updating student');
+    } else {
+      // Redirect back to the homepage to see the updated list
+      res.redirect('/');
+    }
+  });
+});
+
+// 7. Handle Delete Student operation
+app.get('/deleteStudent/:id', (req, res) => {
+  const studentId = req.params.id;
+  const sql = 'DELETE FROM student WHERE studentId = ?';
+  
+  // Execute the delete query on the database
+  connection.query(sql, [studentId], (error, results) => {
+    if (error) {
+      // Handle any error that occurs during the database operation
+      console.error("Error deleting student:", error);
+      res.send('Error deleting student');
+    } else {
+      // Redirect back to the home page to view the updated list
+      res.redirect('/');
+    }
+  });
+});
  
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port http://localhost:${PORT}`));
