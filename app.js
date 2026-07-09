@@ -1,6 +1,19 @@
 const express = require('express');
 const mysql = require('mysql2');
+const multer = require('multer');
+const path = require('path');
 const app = express();
+
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+destination: (req, file, cb) => {
+cb(null, path.join(__dirname, 'public', 'image')); // Directory to save uploaded files
+},
+filename: (req, file, cb) => {
+cb(null, file.originalname); 
+}
+});
+const upload = multer({ storage: storage });
  
 // Create MySQL connection to c237_studentlistapp
 const connection = mysql.createConnection({
@@ -63,11 +76,15 @@ app.get('/addStudent', (req, res) => {
 });
 
 // 4. Handle Add Student form submission
-app.post('/addStudent', (req, res) => {
-  const { name, dob, contact, image } = req.body;
+app.post('/addStudent', upload.single('image'), (req, res) => {
+  const { name, dob, contact } = req.body;
+  const studentImage = req.file
+    ? req.file.filename
+    : (req.body.image || '').trim() || 'John Edward.avif';
+
   const sql = 'INSERT INTO student (name, dob, contact, image) VALUES (?, ?, ?, ?)';
-  
-  connection.query(sql, [name, dob, contact, image], (error, results) => {
+
+  connection.query(sql, [name, dob, contact, studentImage], (error, results) => {
     if (error) {
       console.error("Error adding student:", error);
       res.send('Error adding student');
@@ -100,11 +117,14 @@ app.get('/editStudent/:id', (req, res) => {
 });
 
 // 6. Handle Edit Student form submission
-app.post('/editStudent/:id', (req, res) => {
+app.post('/editStudent/:id', upload.single('image'), (req, res) => {
   const studentId = req.params.id;
   // Extract student data from the form request body
-  const { name, dob, contact, image } = req.body;
-  
+  const { name, dob, contact} = req.body;
+  let image = req.body.currentImage; //retrieve current image filename
+  if (req.file) { //if new image is uploaded
+    image = req.file.filename; // set image to be new image filename
+  } 
   const sql = 'UPDATE student SET name = ?, dob = ?, contact = ?, image = ? WHERE studentId = ?';
   
   // Update the student details in the database
@@ -121,7 +141,7 @@ app.post('/editStudent/:id', (req, res) => {
 });
 
 // 7. Handle Delete Student operation
-app.get('/deleteStudent/:id', (req, res) => {
+app.post('/deleteStudent/:id', (req, res) => {
   const studentId = req.params.id;
   const sql = 'DELETE FROM student WHERE studentId = ?';
   
@@ -138,5 +158,7 @@ app.get('/deleteStudent/:id', (req, res) => {
   });
 });
  
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port http://localhost:${PORT}`));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port http://localhost:${PORT}`));
