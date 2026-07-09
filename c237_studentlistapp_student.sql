@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `c237_studentlistapp` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `c237_studentlistapp`;
 -- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: c237_studentlistapp
@@ -38,7 +40,7 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES (1,'John Edward','2007-05-08','98765432','https://unsplash.com/photos/man-in-black-jacket-smiling-a19OVaa2rzA'),(2,'Mary Thomson','2006-02-06','98765678','https://unsplash.com/photos/woman-in-white-crew-neck-shirt-smiling-IF9TK5Uy-KI'),(3,'Benny Teo','2006-08-18','98789879','https://unsplash.com/photos/a-woman-wearing-a-yellow-jacket-and-black-glasses-htb-wvGXKGE'),(4,'John Edward','2007-05-08','98765432','https://unsplash.com/photos/man-in-black-jacket-smiling-a19OVaa2rzA');
+INSERT INTO `student` VALUES (1,'John Edward','2007-05-08','98765432','John Edward.avif'),(2,'Mary Thomson','2006-02-06','98765678','Mary Thomson.avif'),(3,'Benny Teo','2006-08-18','98789879','Benny Teo.avif'),(4,'John Edward','2007-05-08','98765432','John Edward.avif');
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-07-05  1:20:20
+-- Dump completed on 2026-07-09 12:50:26
