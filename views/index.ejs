@@ -45,7 +45,7 @@
         <% for(let i=0; i < students.length; i++) { %>
           <tr>
             <td><a href="/student/<%= students[i].studentId %>" ><%= students[i].name %></a></td>
-            <td><img src="<%= students[i].image %>" width="80" alt="Student Image" class="img-thumbnail"></td>
+            <td><img src="<%= students[i].image ? '/image/' + encodeURIComponent(students[i].image) : '/image/default.png' %>" width="80" alt="Student Image" class="img-thumbnail"></td>
             <td><%= students[i].contact %></td>
             <td><%= new Date(students[i].dob).toLocaleDateString() %></td>
             <td><a href="/editStudent/<%= students[i].studentId %>" class="btn btn-warning btn-sm">Edit</a></td>
